@@ -31,14 +31,17 @@ export default class DataAccess {
     //
   }
 
-  getList(): Promise<TData> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          {id: '1', url: 'https://yandex.ru'},
-          {id: '2', url: 'https://google.ru'},
-        ])
-      }, 100 + Math.round(1900 * Math.random()))
+  async getList(): Promise<TData> {
+    const db = firebase.firestore();
+
+    const querySnapshot = await db.collection("links").get();
+
+    return querySnapshot.docs.map((doc) => {
+      let documentData = doc.data();
+      return {
+        id: doc.id,
+        url: documentData.url,
+      };
     });
   }
 }

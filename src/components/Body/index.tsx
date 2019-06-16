@@ -1,27 +1,37 @@
 import React from "react";
-import { List, Typography } from "antd";
+import { List, Spin, Typography } from "antd";
 import styles from "./index.module.less";
 import { TData, TItem } from "../../types";
+import { AsyncResult, swch } from "../../asyncResource";
 
 interface Props {
-  data: TData;
+  dataResult: AsyncResult<TData>;
 }
 
-export default class Body extends React.Component<Props> {
-  render() {
-    return (
-      <div className={styles.root}>
-        <List
-          header={<div>URL</div>}
-          bordered
-          dataSource={this.props.data}
-          renderItem={(item: TItem) => (
-            <List.Item key={item.id}>
-              <a href={item.url}>{item.url}</a>
-            </List.Item>
-          )}
-        />
-      </div>
-    );
-  }
+function renderList(data: TData) {
+  return (
+    <List
+      header={<div>URL</div>}
+      bordered
+      dataSource={data}
+      renderItem={(item: TItem) => (
+        <List.Item key={item.id}>
+          <a href={item.url}>{item.url}</a>
+        </List.Item>
+      )}
+    />
+  )
+}
+
+
+export default function Body (props: Props) {
+  return (
+    <div className={styles.root}>
+      {swch(props.dataResult,
+        () => <Spin tip="Loading...">{renderList([])}</Spin>,
+        (r) => renderList(r.value),
+        (r) => <h1>error: {r.error}</h1>,
+      )}
+    </div>
+  );
 }
