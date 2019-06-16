@@ -1,4 +1,4 @@
-import { TData } from "./types";
+import { TData, TItem, TNewItem } from "./types";
 import * as firebase from "firebase/app";
 
 // Add the Firebase products that you want to use
@@ -6,9 +6,14 @@ import "firebase/auth";
 import "firebase/firestore";
 
 export default class DataAccess {
+  db: firebase.firestore.Firestore;
+
   constructor(firebaseConfig: Object) {
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    this.db = firebase.firestore();
+
     //
     // firebase.auth()
     //   .signInWithEmailAndPassword('koluch@koluch.ru', '123456')
@@ -31,10 +36,12 @@ export default class DataAccess {
     //
   }
 
-  async getList(): Promise<TData> {
-    const db = firebase.firestore();
+  async add(item: TNewItem): Promise<void> {
+    await this.db.collection("links").add(item);
+  }
 
-    const querySnapshot = await db.collection("links").get();
+  async getList(): Promise<TData> {
+    const querySnapshot = await this.db.collection("links").get();
 
     return querySnapshot.docs.map((doc) => {
       let documentData = doc.data();
