@@ -1,4 +1,29 @@
 @import "../../vars.less";
 
 .root {
+  .item {
+    display: flex;
+    align-items: stretch;
+  }
+}
+
+.url {
+  flex: 1;
+  position: relative;
+
+  > a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.tags {
+  max-width: 30%;
+  margin-left: @default-padding;
 }

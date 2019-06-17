@@ -27,11 +27,12 @@ export default class DataAccess {
       (querySnapshot: firebase.firestore.QuerySnapshot) => {
         const data: TData = querySnapshot.docs.map(
           (doc: firebase.firestore.QueryDocumentSnapshot) => {
-            let documentData = doc.data();
+            const documentData = doc.data();
             return {
               id: doc.id,
               uid: documentData.uid,
-              url: documentData.url
+              url: documentData.url,
+              tags: documentData.tags
             };
           }
         );

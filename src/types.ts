@@ -5,6 +5,7 @@ export interface User {
 export interface TNewItem {
   url: string;
   uid: string;
+  tags: string[];
 }
 
 export interface TItem extends TNewItem {
