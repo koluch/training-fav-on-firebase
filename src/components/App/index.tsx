@@ -5,10 +5,11 @@ import styles from "./index.module.less";
 import DataAccess from "../../DataAccess";
 import * as asyncResource from "../../asyncResource";
 import { AsyncResult } from "../../asyncResource";
-import { TData } from "../../types";
+import { TData, User } from "../../types";
 import UserPanel from "../UserPanel";
 
 interface Props {
+  user: User;
   onSignOut: () => void;
   dataAccess: DataAccess;
 }
@@ -32,7 +33,7 @@ export default function App(props: Props) {
   const handleAddItem = async () => {
     setDataResult(asyncResource.fetching());
     setNewItem({ ...newItem, isFetching: true });
-    await props.dataAccess.add({ url: newItem.text });
+    await props.dataAccess.add({ url: newItem.text, uid: props.user.id });
     setNewItem({ ...newItem, text: "", isFetching: false });
   };
 

@@ -24,7 +24,8 @@ const firebaseConfig = {
   messagingSenderId: "131847637134",
   appId: "1:131847637134:web:a31646127a79a875"
 };
-const dataAccess = new DataAccess(firebaseConfig);
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 // Init FirebaseUI
 const uiConfig = {
@@ -51,8 +52,13 @@ function onAuthChange(user: firebase.User | null) {
   const isAuth = !!user;
   document.body.classList.toggle("auth", isAuth);
   if (isAuth) {
+    const userInfo = {
+      id: user.uid
+    };
+    const dataAccess = new DataAccess(userInfo);
     ReactDOM.render(
       <App
+        user={userInfo}
         onSignOut={() => {
           auth.signOut();
         }}
