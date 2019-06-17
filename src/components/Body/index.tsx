@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Spin, Typography } from "antd";
+import { Alert, List, Spin, Typography } from "antd";
 import styles from "./index.module.less";
 import { TData, TItem } from "../../types";
 import { AsyncResult, swch } from "../../asyncResource";
@@ -20,17 +20,25 @@ function renderList(data: TData) {
         </List.Item>
       )}
     />
-  )
+  );
 }
 
-
-export default function Body (props: Props) {
+export default function Body(props: Props) {
   return (
     <div className={styles.root}>
-      {swch(props.dataResult,
-        () => <Spin tip="Loading...">{renderList([])}</Spin>,
-        (r) => renderList(r.value),
-        (r) => <h1>error: {r.error}</h1>,
+      {swch(
+        props.dataResult,
+        () => (
+          <Spin tip="Loading...">{renderList([])}</Spin>
+        ),
+        r => renderList(r.value),
+        r => (
+          <Alert
+            message="Unable to read link list"
+            description={r.error}
+            type="error"
+          />
+        )
       )}
     </div>
   );

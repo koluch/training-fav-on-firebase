@@ -7,6 +7,8 @@ import * as asyncResource from "../../asyncResource";
 import { AsyncResult } from "../../asyncResource";
 import { TData, User } from "../../types";
 import UserPanel from "../UserPanel";
+import { notification } from "antd";
+import { parseUrl } from "../../utils";
 
 interface Props {
   user: User;
@@ -33,8 +35,21 @@ export default function App(props: Props) {
   const handleAddItem = async () => {
     setDataResult(asyncResource.fetching());
     setNewItem({ ...newItem, isFetching: true });
-    await props.dataAccess.add({ url: newItem.text, uid: props.user.id });
-    setNewItem({ ...newItem, text: "", isFetching: false });
+    try {
+      const newItemData = {
+        url: parseUrl(newItem.text),
+        uid: props.user.id
+      };
+      await props.dataAccess.add(newItemData);
+      setNewItem({ ...newItem, text: "", isFetching: false });
+    } catch (e) {
+      notification.error({
+        message: "Unable to add link",
+        description: e.message
+      });
+      setDataResult(dataResult);
+      setNewItem({ ...newItem, isFetching: false });
+    }
   };
 
   return (
