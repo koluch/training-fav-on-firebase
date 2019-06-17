@@ -6,8 +6,10 @@ import DataAccess from "../../DataAccess";
 import * as asyncResource from "../../asyncResource";
 import { AsyncResult } from "../../asyncResource";
 import { TData } from "../../types";
+import UserPanel from "../UserPanel";
 
 interface Props {
+  onSignOut: () => void;
   dataAccess: DataAccess;
 }
 
@@ -37,14 +39,21 @@ export default function App(props: Props) {
   return (
     <div className={styles.root}>
       <div className={styles.content}>
-        <Header
-          newItemValue={newItem}
-          onChangeNewItemText={(text: string) => {
-            setNewItem({ ...newItem, text });
-          }}
-          onAddItem={handleAddItem}
-        />
-        <Body dataResult={dataResult} />,
+        <div className={styles.panel}>
+          <UserPanel onSignOut={props.onSignOut} />
+        </div>
+        <div className={styles.panel}>
+          <Header
+            newItemValue={newItem}
+            onChangeNewItemText={(text: string) => {
+              setNewItem({ ...newItem, text });
+            }}
+            onAddItem={handleAddItem}
+          />
+        </div>
+        <div className={styles.panel}>
+          <Body dataResult={dataResult} />
+        </div>
       </div>
     </div>
   );

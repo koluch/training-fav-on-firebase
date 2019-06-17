@@ -10,3 +10,9 @@
   max-width: 768px;
   flex: 1;
 }
+
+.panel {
+  &:not(:first-child) {
+    margin-top: @default-padding;
+  }
+}

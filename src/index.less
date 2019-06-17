@@ -1,3 +1,25 @@
 :global {
+  body.auth {
+    #react {
+      display: block;
+    }
+    #firebaseui-auth-container {
+      display: none;
+    }
+  }
+  body:not(.auth) {
+    #react {
+      display: none;
+    }
+    #firebaseui-auth-container {
+      display: block;
+    }
+  }
 
+  #firebaseui-auth-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
 }
