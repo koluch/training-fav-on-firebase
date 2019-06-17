@@ -6,9 +6,11 @@
   "scripts": {
     "start": "parcel src/index.html",
     "test:types": "npx tsc",
-    "test": "npm run test:types"
+    "test": "npm run test:types",
+    "build": "npm run test && parcel build src/index.html",
+    "deploy": "npm run build && npx firebase deploy"
   },
-  "author": "",
+  "author": "Nikolai Mavrenkov <koluch@koluch.ru>",
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^16.8.20",

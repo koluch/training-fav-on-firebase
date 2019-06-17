@@ -19,27 +19,6 @@ export default class DataAccess {
       .collection(COLLECTION_NAME)
       .orderBy("created", "desc")
       .limit(5);
-
-    //
-    // firebase.auth()
-    //   .signInWithEmailAndPassword('koluch@koluch.ru', '123456')
-    //   .then((r) => {
-    //     console.log("r", r)
-    //
-    //     const db = firebase.firestore();
-    //     db.collection("links").get().then((querySnapshot) => {
-    //       querySnapshot.forEach((doc) => {
-    //         console.log(`${doc.id} => ${doc.data()}`);
-    //       });
-    //     });
-    //   })
-    //   .catch(function(error) {
-    //     // Handle Errors here.
-    //     var errorCode = error.code;
-    //     var errorMessage = error.message;
-    //     // ...
-    //   });
-    //
   }
 
   subscribe(
