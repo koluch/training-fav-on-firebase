@@ -15,25 +15,21 @@ interface Props {
 export default function App(props: Props) {
 
   let initialDataState: AsyncResult<TData> = asyncResource.fetching();
+  const [newItem, setNewItem] = useState(initialDataState);
   const [dataResult, setDataResult] = useState(initialDataState);
   const [lastItemAddTime, setLastItemAddTime] = useState(new Date().getTime());
 
   useEffect(() => {
-    const handleFetchList = async () => {
-      setDataResult(asyncResource.fetching())
-      return props.dataAccess.getList().then((data) => {
-        setDataResult(asyncResource.success(data));
-      }).catch((e) => {
-        setDataResult(asyncResource.failed(e.message));
-      })
-    };
-
-    handleFetchList();
+    return props.dataAccess.subscribe((data) => {
+      setDataResult(asyncResource.success(data));
+    }, (error) => {
+      setDataResult(asyncResource.failed(error));
+    });
   }, [lastItemAddTime]);
 
   const handleAddItem = async (newItem: TNewItem) => {
     await props.dataAccess.add(newItem);
-    setLastItemAddTime(new Date().getTime());
+    // setLastItemAddTime(new Date().getTime());
   };
 
 
