@@ -1,34 +1,42 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent } from "react";
 import { Button, Input } from "antd";
 import styles from "./index.module.less";
-import { TNewItem } from "../../types";
+
+export interface NewItemState {
+  text: string;
+  isFetching: boolean;
+}
 
 interface Props {
-  onAddItem: (newItem: TNewItem) => void;
+  newItemValue: NewItemState;
+  onChangeNewItemText: (text: string) => void;
+  onAddItem: () => void;
 }
 
 export default function Header(props: Props) {
-  const [url, setUrl] = useState("");
-
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    props.onAddItem({
-      url
-    });
+    props.onAddItem();
   }
 
+  const { newItemValue } = props;
   return (
     <div className={styles.root}>
       <form className={styles.newUrlForm} onSubmit={handleSubmit}>
         <Input
-          value={url}
+          disabled={newItemValue.isFetching}
+          value={newItemValue.text}
           onChange={e => {
-            setUrl(e.target.value);
+            props.onChangeNewItemText(e.target.value);
           }}
           className={styles.newUrlFormControl}
           placeholder="URL"
         />
-        <Button className={styles.newUrlFormControl} htmlType="submit">
+        <Button
+          disabled={newItemValue.isFetching || newItemValue.text === ''}
+          className={styles.newUrlFormControl}
+          htmlType="submit"
+        >
           {"Add"}
         </Button>
       </form>

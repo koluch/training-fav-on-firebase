@@ -4,6 +4,8 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+const COLLECTION_NAME = "links";
+
 export default class DataAccess {
   db: firebase.firestore.Firestore;
   query: firebase.firestore.Query;
@@ -13,7 +15,10 @@ export default class DataAccess {
     firebase.initializeApp(firebaseConfig);
 
     this.db = firebase.firestore();
-    this.query = this.db.collection("links").orderBy("created", "desc");
+    this.query = this.db
+      .collection(COLLECTION_NAME)
+      .orderBy("created", "desc")
+      .limit(5);
 
     //
     // firebase.auth()
@@ -37,24 +42,31 @@ export default class DataAccess {
     //
   }
 
-  subscribe(listener: (data: TData) => void, errorListener: (error: string) => void): () => void {
-    const unsubscribe = this.query.onSnapshot((querySnapshot: firebase.firestore.QuerySnapshot) => {
-      const data: TData = querySnapshot.docs.map((doc: firebase.firestore.QueryDocumentSnapshot) => {
-        let documentData = doc.data();
-        return {
-          id: doc.id,
-          url: documentData.url
-        };
-      });
-      listener(data);
-    }, (e) => {
-      errorListener(e.message);
-    });
-    return unsubscribe
+  subscribe(
+    listener: (data: TData) => void,
+    errorListener: (error: string) => void
+  ): () => void {
+    const unsubscribe = this.query.onSnapshot(
+      (querySnapshot: firebase.firestore.QuerySnapshot) => {
+        const data: TData = querySnapshot.docs.map(
+          (doc: firebase.firestore.QueryDocumentSnapshot) => {
+            let documentData = doc.data();
+            return {
+              id: doc.id,
+              url: documentData.url
+            };
+          }
+        );
+        listener(data);
+      },
+      e => {
+        errorListener(e.message);
+      }
+    );
+    return unsubscribe;
   }
 
   async add(item: TNewItem): Promise<void> {
-    await this.db.collection("links").add(item);
+    await this.db.collection(COLLECTION_NAME).add(item);
   }
-
 }
