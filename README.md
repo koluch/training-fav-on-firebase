@@ -2,6 +2,7 @@
 
 TODO:
 
-  - Pagination
-  - Link deleting
-  - Search by tags
+- Pagination
+- Link deleting
+- Use table for link list
+- Search by tags
