@@ -30,18 +30,21 @@ const dataAccess = new DataAccess(firebaseConfig);
 const uiConfig = {
   signInOptions: [
     // Leave the lines as is for the providers you want to offer your users.
-    // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-    // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+    firebase.auth.GithubAuthProvider.PROVIDER_ID,
     firebase.auth.EmailAuthProvider.PROVIDER_ID
+    // {
+    //   provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    //   signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+    // }
     // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
     // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
   ]
 };
 const auth = firebase.auth();
 const ui = new firebaseui.auth.AuthUI(auth);
-ui.start(`#${FIREBASE_AUTH_UI_MOUNT_ID}`, uiConfig);
 
 // Init auth
 function onAuthChange(user: firebase.User | null) {
@@ -57,12 +60,16 @@ function onAuthChange(user: firebase.User | null) {
       />,
       document.getElementById(REACT_MOUNT_ID)
     );
+    ui.reset();
   } else {
     ReactDOM.unmountComponentAtNode(document.getElementById(REACT_MOUNT_ID));
+    ui.start(`#${FIREBASE_AUTH_UI_MOUNT_ID}`, uiConfig);
   }
 }
-auth.onAuthStateChanged(onAuthChange, function(error) {
+
+function onAuthChangeFailed(error: any) {
   // todo: handle properly
   console.log(error);
-});
-onAuthChange(auth.currentUser);
+}
+
+auth.onAuthStateChanged(onAuthChange, onAuthChangeFailed);
